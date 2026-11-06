@@ -49,7 +49,8 @@ random.seed(100)
 py_orbit_sns_home = os.path.abspath("..")
 
 names = ["MEBT", "DTL1", "DTL2", "DTL3", "DTL4", "DTL5", "DTL6", "CCL1", "CCL2", "CCL3", "CCL4", "SCLMed", "SCLHigh", "HEBT1", "HEBT2"]
-names = ["MEBT", "DTL1", "DTL2"]
+names = ["MEBT", "DTL1", "DTL2", "DTL3", "DTL4", "DTL5", "DTL6", "CCL1", "CCL2", "CCL3", "CCL4", "SCLMed", "SCLHigh", "HEBT1"]
+#names = ["MEBT", "DTL1", "DTL2"]
 
 # ---- create the factory instance
 sns_linac_factory = SNS_LinacLatticeFactory()
@@ -73,8 +74,8 @@ print("Linac lattice is ready. L=", accLattice.getLength())
 # ---- MatrixRfGap uses a matrix approach like envelope codes
 # ---- RfGapTTF uses Transit Time Factors (TTF) like PARMILA
 # cppGapModel = BaseRfGap
-#cppGapModel = MatrixRfGap
-cppGapModel = RfGapTTF
+cppGapModel = MatrixRfGap
+#cppGapModel = RfGapTTF
 rf_gaps = accLattice.getRF_Gaps()
 for rf_gap in rf_gaps:
     rf_gap.setCppGapModel(cppGapModel())
@@ -325,20 +326,27 @@ file_out.close()
 #---- through the linac lattice.
 #-----------------------------------------------------------------------------
 file_out = open("pyorbit_transport_mtrx_trajectory.dat", "w")
+st = " ind Name  pos[m]  detX detY detZ    x_rms y_rms  z_rms  PhaseAdvX PhaseAdvY PhaseAdvZ"
+print(st)
+file_out.write(st + "\n")
 for trMtrx_ind in range(len(trMatrices)):
     bunch = Bunch()
     bunch_in.copyBunchTo(bunch)   
     trMtrx = trMatrices[trMtrx_ind]
     s = " %03d " % trMtrx_ind + "  %55s " % trMtrx.getName()
-    s += " pos[m] = %4.5f " % trMtrx.getPosition()
-    s += " det(M) = %8.6f  %8.6f  %8.6f " % trMtrx.getNormDetXYZ()
+    s += " %7.3f   " % trMtrx.getPosition()
+    s += " %6.4f  %6.4f  %6.4f  " % trMtrx.getNormDetXYZ()
     trMtrx.getTransportMatrix().track(bunch)
     twiss_analysis.analyzeBunch(bunch)
     x_rms = math.sqrt(twiss_analysis.getTwiss(0)[1] * twiss_analysis.getTwiss(0)[3]) * 1000.0
     y_rms = math.sqrt(twiss_analysis.getTwiss(1)[1] * twiss_analysis.getTwiss(1)[3]) * 1000.0
     z_rms = math.sqrt(twiss_analysis.getTwiss(2)[1] * twiss_analysis.getTwiss(2)[3]) * 1000.0
-    s += " rms_xyz =  %5.3f  %5.3f  %5.3f " % (x_rms, y_rms, z_rms)
+    s += "   %5.3f  %5.3f  %5.3f  " % (x_rms, y_rms, z_rms)
+    phase_adv_arr = trMtrx.getPhaseAdvances()
+    s += " %+6.2f  %+6.2f  %+6.2f "%(tuple(phase_adv_arr))
     print(s)
     file_out.write(s + "\n")
     file_out.flush()
 file_out.close()
+
+print ("debug remove all nodes = ",trMatricesGenerator.removeAllNodes())
