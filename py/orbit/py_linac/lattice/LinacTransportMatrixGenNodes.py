@@ -236,20 +236,24 @@ class LinacTrMatrixGenNode(MarkerLinacNode):
         nodes = self.parent_node.getChildNodes(MarkerLinacNode.ENTRANCE)
         if(self in nodes):
             nodes.remove(self)
+            self.parent_node = None
             return True
         nodes = self.parent_node.getChildNodes(MarkerLinacNode.EXIT)
         if(self in nodes):
             nodes.remove(self)
+            self.parent_node = None
             return True
         n_parts = self.parent_node.getnParts()
         for part_ind in range(n_parts):
             nodes = self.parent_node.getChildNodes(MarkerLinacNode.BODY,part_ind,MarkerLinacNode.BEFORE)
             if(self in nodes):
                 nodes.remove(self)
+                self.parent_node = None
                 return True
             nodes = self.parent_node.getChildNodes(MarkerLinacNode.BODY,part_ind,MarkerLinacNode.AFTER)
             if(self in nodes):
                 nodes.remove(self)
+                self.parent_node = None
                 return True
         return False
 
@@ -338,7 +342,12 @@ class LinacTrMatricesController:
         inside the LinacTrMatrixGenNode instances.
         """
         result = True
-        for trMtrxNode in self.trMatrxNodes:
-            if(not trMtrxNode.removeFromParent()):
+        for trMtrxNode in self.trMatrxNodes[:]:
+            res = trMtrxNode.removeFromParent()
+            if(not res):
                 result = False
+            else:
+                self.trMatrxNodes.remove(trMtrxNode)
+        if(self.getCount() != 0):
+            result = False
         return result

@@ -50,7 +50,7 @@ py_orbit_sns_home = os.path.abspath("..")
 
 names = ["MEBT", "DTL1", "DTL2", "DTL3", "DTL4", "DTL5", "DTL6", "CCL1", "CCL2", "CCL3", "CCL4", "SCLMed", "SCLHigh", "HEBT1", "HEBT2"]
 names = ["MEBT", "DTL1", "DTL2", "DTL3", "DTL4", "DTL5", "DTL6", "CCL1", "CCL2", "CCL3", "CCL4", "SCLMed", "SCLHigh", "HEBT1"]
-#names = ["MEBT", "DTL1", "DTL2"]
+names = ["MEBT", "DTL1", "DTL2"]
 
 # ---- create the factory instance
 sns_linac_factory = SNS_LinacLatticeFactory()
