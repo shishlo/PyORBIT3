@@ -139,9 +139,10 @@ class LinacTrMatrixGenNode(MarkerLinacNode):
             self.twiss_arr[axis_ind] = [alpha, beta, gamma, emittance]
             #---- betatron phase advance in degrees
             if(self.trMtrxNode_ind != 0):
+                alpha_0 = self.trMatricesController.getNode(0).getTwissParams(axis_ind)[0]
                 beta_0 = self.trMatricesController.getNode(0).getTwissParams(axis_ind)[1]
                 sin_mu = mtrx.get(axis_ind*2,axis_ind*2 + 1)/math.sqrt(beta*beta_0)
-                cos_mu = math.sqrt(beta_0/beta)*mtrx.get(axis_ind*2,axis_ind*2) - alpha*sin_mu
+                cos_mu = math.sqrt(beta_0/beta)*mtrx.get(axis_ind*2,axis_ind*2) - alpha_0*sin_mu
                 phase_advance = (180./math.pi)*math.atan2(sin_mu,cos_mu)           
                 self.phase_adv_arr[axis_ind] = phase_advance 
            
