@@ -192,7 +192,7 @@ bunch_gen = SNS_Linac_BunchGenerator(twissX, twissY, twissZ)
 bunch_gen.setKinEnergy(e_kin_ini)
 
 # set the beam peak current in mA
-bunch_gen.setBeamCurrent(0.0)
+bunch_gen.setBeamCurrent(38.0)
 
 bunch_in = bunch_gen.getBunch(nParticles=10000, distributorClass=WaterBagDist3D)
 # bunch_in = bunch_gen.getBunch(nParticles = 100000, distributorClass = GaussDist3D)
